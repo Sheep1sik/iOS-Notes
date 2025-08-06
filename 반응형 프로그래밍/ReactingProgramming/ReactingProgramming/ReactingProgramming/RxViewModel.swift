@@ -7,7 +7,7 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
+import RxRelay
 
 // MARK: - Input / Output
 
@@ -17,8 +17,8 @@ protocol RxViewModelInput {
 }
 
 protocol RxViewModelOutput {
-    var isInputValid: Driver<Bool> { get }
-    var buttonTappedText: Driver<String> { get }
+    var isInputValid: Observable<Bool> { get }
+    var buttonTappedText: Observable<String> { get }
 }
 
 // MARK: - ViewModel
@@ -43,19 +43,16 @@ final class RxViewModel: RxViewModelInput, RxViewModelOutput {
     }
     
     // MARK: - Output
-    let isInputValid: Driver<Bool>
-    let buttonTappedText: Driver<String>
+    let isInputValid: Observable<Bool>
+    let buttonTappedText: Observable<String>
     
     // MARK: - Init
     init() {
         isInputValid = inputTextRelay
             .map { $0.count >= 3 }
             .distinctUntilChanged()
-            .asDriver(onErrorJustReturn: false)
         
         buttonTappedText = didTapButtonRelay
             .map { "버튼이 눌렸어요!" }
-            .asDriver(onErrorJustReturn: "")
-        
     }
 }

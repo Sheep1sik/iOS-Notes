@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 final class RxViewController: UIViewController {
     
@@ -68,10 +69,12 @@ private extension RxViewController {
             .disposed(by: disposeBag)
         
         viewModel.isInputValid
+            .asDriver(onErrorJustReturn: false)
             .drive(rxView.getButton.rx.isEnabled)
             .disposed(by: disposeBag)
         
         viewModel.buttonTappedText
+            .asDriver(onErrorJustReturn: "")
             .drive(rxView.getLabel.rx.text)
             .disposed(by: disposeBag)
     }
